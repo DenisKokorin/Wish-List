@@ -3,7 +3,9 @@ package main
 import (
 	"log/slog"
 	"os"
-	config "wishlistservice/internal"
+
+	config "github.com/DenisKokorin/Wish-List/internal"
+	"github.com/DenisKokorin/Wish-List/internal/app"
 )
 
 func main() {
@@ -11,8 +13,13 @@ func main() {
 
 	log := setupLogger()
 
-	log.Info("starting application", slog.Any("cfg", cfg))
+	log.Info("starting application")
 
+	application := app.New(log, cfg.GRPC.Port)
+
+	application.GRPCserver.MustRun()
+
+	log.Info("end")
 }
 
 func setupLogger() *slog.Logger {
