@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -17,7 +18,8 @@ func main() {
 
 	log.Info("starting application")
 
-	application := app.New(log, cfg.GRPC.Port)
+	path := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", cfg.DB.User, cfg.DB.Password, cfg.DB.Host, cfg.DB.Port, cfg.DB.DBName)
+	application := app.New(log, cfg.GRPC.Port, path)
 
 	go application.GRPCserver.MustRun()
 

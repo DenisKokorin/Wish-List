@@ -15,9 +15,9 @@ type App struct {
 	port       int
 }
 
-func New(log *slog.Logger, port int) *App {
+func New(log *slog.Logger, port int, wishList wishlist.WishList) *App {
 	gRPCserver := grpc.NewServer()
-	wishlist.Register(gRPCserver)
+	wishlist.Register(gRPCserver, wishList)
 
 	return &App{
 		log:        log,
