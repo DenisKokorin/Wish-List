@@ -9,16 +9,28 @@ import (
 
 	config "github.com/DenisKokorin/Wish-List/internal"
 	"github.com/DenisKokorin/Wish-List/internal/app"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	cfg := config.MustLoad()
 
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASSWORD")
+	dbHost := "postgres"
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+
 	log := setupLogger()
 
 	log.Info("starting application")
 
-	path := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", cfg.DB.User, cfg.DB.Password, cfg.DB.Host, cfg.DB.Port, cfg.DB.DBName)
+	path := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPass, dbHost, dbPort, dbName)
 	application := app.New(log, cfg.GRPC.Port, path)
 
 	go application.GRPCserver.MustRun()
