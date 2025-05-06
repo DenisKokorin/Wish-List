@@ -3,7 +3,7 @@ package wishlist
 import (
 	"context"
 
-	wl "github.com/DenisKokorin/WishListProto/gen/go"
+	wl "github.com/DenisKokorin/WishListProto/gen/go/wishlist"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

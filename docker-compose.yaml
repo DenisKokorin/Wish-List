@@ -7,6 +7,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "${DB_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -19,14 +21,49 @@ services:
     build:
       context: .
       dockerfile: migrator.Dockerfile
+    volumes:
+      - ./env/.env:/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  auth:
+    build:
+      context: https://github.com/DenisKokorin/AuthService.git
+      dockerfile: Dockerfile
+    volumes:
+      - ./env/auth.env:/.env
+    ports:
+      - "7070:7070"
     depends_on:
       postgres:
         condition: service_healthy
   
   wishlist:
-    build: .
+    build:
+      context: .
+      dockerfile: wishlist.Dockerfile 
+    volumes:
+      - ./env/.env:/.env
+      - ./config/local.yaml:/local.yaml      
     ports:
       - "50051:50051"
     depends_on:
-        postgres:
-          condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  group:
+    build:
+      context: .
+      dockerfile: group.Dockerfile 
+    volumes:
+      - ./env/.env:/.env
+      - ./config/local.yaml:/local.yaml      
+    ports:
+      - "50052:50052"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

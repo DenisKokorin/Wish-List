@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net"
 
-	wishlist "github.com/DenisKokorin/Wish-List/internal/gRPC"
+	wishlist "github.com/DenisKokorin/Wish-List/internal/wishlist/gRPC"
 	"google.golang.org/grpc"
 )
 
@@ -33,22 +33,22 @@ func (a *App) MustRun() {
 }
 
 func (a *App) Run() error {
-	log := a.log.With(slog.String("op", "grpcapp.Run"), slog.Int("port", a.port))
+	log := a.log.With(slog.String("op", "grpcWLapp.Run"), slog.Int("port", a.port))
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
 	if err != nil {
-		return fmt.Errorf("%s: %w", "grpcapp.Run", err)
+		return fmt.Errorf("%s: %w", "grpcaWLpp.Run", err)
 	}
 
-	log.Info("grpc server is running", slog.String("addr", l.Addr().String()))
+	log.Info("WLgrpc server is running", slog.String("addr", l.Addr().String()))
 	if err := a.gRPCserver.Serve(l); err != nil {
-		return fmt.Errorf("%s: %w", "grpcapp.Run", err)
+		return fmt.Errorf("%s: %w", "grpcWLapp.Run", err)
 	}
 
 	return nil
 }
 
 func (a *App) Stop() {
-	a.log.Info("stopping grpc server")
+	a.log.Info("stopping WLgrpc server")
 	a.gRPCserver.GracefulStop()
 }

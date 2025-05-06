@@ -9,22 +9,28 @@ import (
 )
 
 type Config struct {
-	Env  string     `yaml:"env"`
-	GRPC GRPCconfig `yaml:"grpc"`
-	DB   DBconfig   `yaml:"db"`
+	Env          string             `yaml:"env"`
+	GrpcWishList GrpcWishListConfig `yaml:"wishlist"`
+	GrpcGroup    GrpcGroupConfig    `yaml:"group"`
+	Clients      ClientsConfig      `yaml:"clients"`
 }
 
-type GRPCconfig struct {
+type GrpcWishListConfig struct {
 	Port    int           `yaml:"port"`
 	Timeout time.Duration `yaml:"timeout"`
 }
 
-type DBconfig struct {
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	Host     string `yaml:"host"`
-	Port     string `yaml:"port"`
-	DBName   string `yaml:"dbname"`
+type GrpcGroupConfig struct {
+	Port    int           `yaml:"port"`
+	Timeout time.Duration `yaml:"timeout"`
+}
+
+type Client struct {
+	Address string `yaml:"address"`
+}
+
+type ClientsConfig struct {
+	Auth Client `yaml:"auth"`
 }
 
 func MustLoad() *Config {

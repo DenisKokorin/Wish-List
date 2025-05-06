@@ -6,7 +6,7 @@ import (
 	"log/slog"
 
 	"github.com/DenisKokorin/Wish-List/internal/domain/models"
-	wl "github.com/DenisKokorin/WishListProto/gen/go"
+	wl "github.com/DenisKokorin/WishListProto/gen/go/wishlist"
 )
 
 type WishList struct {

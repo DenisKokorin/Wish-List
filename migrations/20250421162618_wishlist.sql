@@ -2,7 +2,7 @@
 CREATE TABLE wishlist (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
-    title VARCHAR NOT NULL UNIQUE,
+    title VARCHAR NOT NULL,
     is_private BOOLEAN DEFAULT false
 );
 

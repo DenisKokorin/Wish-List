@@ -3,9 +3,9 @@ package app
 import (
 	"log/slog"
 
-	grpcapp "github.com/DenisKokorin/Wish-List/internal/app/gRPC"
-	wishlistservice "github.com/DenisKokorin/Wish-List/internal/services/wishlist"
 	"github.com/DenisKokorin/Wish-List/internal/storage/postgres"
+	grpcapp "github.com/DenisKokorin/Wish-List/internal/wishlist/app/gRPC"
+	wishlistservice "github.com/DenisKokorin/Wish-List/internal/wishlist/services"
 )
 
 type App struct {

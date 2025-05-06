@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"os"
@@ -8,7 +9,8 @@ import (
 	"syscall"
 
 	config "github.com/DenisKokorin/Wish-List/internal"
-	"github.com/DenisKokorin/Wish-List/internal/wishlist/app"
+	clients "github.com/DenisKokorin/Wish-List/internal/clients/auth"
+	groupapp "github.com/DenisKokorin/Wish-List/internal/group/app"
 	"github.com/joho/godotenv"
 )
 
@@ -28,11 +30,16 @@ func main() {
 
 	log := setupLogger()
 
-	log.Info("starting wishlist application")
+	log.Info("starting group application")
+
+	authClient, err := clients.New(context.Background(), cfg.Clients.Auth.Address)
+	if err != nil {
+		log.Error("failed to init auth client: %w", err)
+		os.Exit(1)
+	}
 
 	path := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPass, dbHost, dbPort, dbName)
-	application := app.New(log, cfg.GrpcWishList.Port, path)
-
+	application := groupapp.New(log, cfg.GrpcGroup.Port, path, authClient)
 	go application.GRPCserver.MustRun()
 
 	stop := make(chan os.Signal, 1)
@@ -40,11 +47,11 @@ func main() {
 
 	sign := <-stop
 
-	log.Info("stopping wishlist application", slog.String("sign", sign.String()))
+	log.Info("stopping group application", slog.String("sign", sign.String()))
 
 	application.GRPCserver.Stop()
 
-	log.Info("application wishlist stoped")
+	log.Info("application group stoped")
 }
 
 func setupLogger() *slog.Logger {
